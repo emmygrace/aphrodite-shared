@@ -1,12 +1,10 @@
 /**
  * Wheel definitions module.
  * 
- * This file now re-exports from the registry system.
  * Individual wheel definitions are in the definitions/ subdirectory.
- * 
- * @deprecated Use the registry system directly: import { getWheelDefinition } from './registry'
+ * Use the registry system for lookup: import { getWheelDefinition } from './registry'
  */
 
-export * from './registry';
+// Re-export individual definitions (for direct import if needed)
 export * from './definitions';
 
