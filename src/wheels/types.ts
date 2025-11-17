@@ -64,3 +64,37 @@ export interface WheelDefinition {
   config?: Record<string, any>;
 }
 
+/**
+ * Wheel definition with preset overrides and metadata.
+ * This extends WheelDefinition to include optional visual/glyph config overrides
+ * that are specific to this wheel, plus metadata for versioning and organization.
+ */
+export interface WheelDefinitionWithPresets extends WheelDefinition {
+  /**
+   * Optional visual configuration overrides specific to this wheel.
+   * These will be merged with defaults when creating presets.
+   */
+  defaultVisualConfig?: Partial<import('../configs/types').VisualConfig>;
+  
+  /**
+   * Optional glyph configuration overrides specific to this wheel.
+   * These will be merged with defaults when creating presets.
+   */
+  defaultGlyphConfig?: Partial<import('../configs/types').GlyphConfig>;
+  
+  /**
+   * Version of this wheel definition (e.g., "1.0.0")
+   */
+  version?: string;
+  
+  /**
+   * Author or creator of this wheel definition
+   */
+  author?: string;
+  
+  /**
+   * Tags for categorizing and searching wheel definitions
+   */
+  tags?: string[];
+}
+

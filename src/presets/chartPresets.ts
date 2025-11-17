@@ -3,9 +3,9 @@
  * These provide complete, ready-to-use chart styling configurations.
  */
 
-import type { WheelDefinition } from '../wheels/types';
+import type { WheelDefinitionWithPresets } from '../wheels/types';
 import type { VisualConfig, GlyphConfig } from '../configs/types';
-import { standardNatalWheel } from '../wheels/definitions';
+import { getWheelDefinition } from '../wheels/registry';
 import { defaultVisualConfig, mergeVisualConfig } from '../configs/visual';
 import { defaultGlyphConfig, mergeGlyphConfig } from '../configs/glyphs';
 
@@ -15,32 +15,96 @@ import { defaultGlyphConfig, mergeGlyphConfig } from '../configs/glyphs';
 export interface ChartPreset {
   name: string;
   description?: string;
-  wheel: WheelDefinition;
+  wheel: WheelDefinitionWithPresets;
   visualConfig: VisualConfig;
   glyphConfig: GlyphConfig;
+}
+
+/**
+ * Create a preset from a wheel definition with optional overrides.
+ * Merges configurations in this order:
+ * 1. Default configs (from configs/visual.ts and configs/glyphs.ts)
+ * 2. Wheel-specific defaults (from wheel.defaultVisualConfig/defaultGlyphConfig)
+ * 3. Preset-specific overrides (from visualOverrides/glyphOverrides)
+ * 
+ * @param wheelName - Name of the wheel definition to use
+ * @param presetName - Name for the preset
+ * @param visualOverrides - Optional visual config overrides for this preset
+ * @param glyphOverrides - Optional glyph config overrides for this preset
+ * @returns A complete chart preset
+ * @throws Error if wheel definition is not found
+ */
+export function createPresetFromWheel(
+  wheelName: string,
+  presetName: string,
+  visualOverrides?: Partial<VisualConfig>,
+  glyphOverrides?: Partial<GlyphConfig>
+): ChartPreset {
+  const wheel = getWheelDefinition(wheelName);
+  if (!wheel) {
+    throw new Error(`Wheel definition not found: ${wheelName}`);
+  }
+  
+  // Merge: defaults -> wheel defaults -> preset overrides
+  // First merge wheel defaults with base defaults, then merge preset overrides
+  const combinedVisualOverrides = {
+    ...wheel.defaultVisualConfig,
+    ...visualOverrides,
+    // Deep merge aspectColors if both exist
+    aspectColors: {
+      ...wheel.defaultVisualConfig?.aspectColors,
+      ...visualOverrides?.aspectColors,
+    },
+  };
+  const visualConfig = mergeVisualConfig(combinedVisualOverrides);
+  
+  const combinedGlyphOverrides = {
+    ...wheel.defaultGlyphConfig,
+    ...glyphOverrides,
+    // Deep merge glyph objects if both exist
+    signGlyphs: {
+      ...wheel.defaultGlyphConfig?.signGlyphs,
+      ...glyphOverrides?.signGlyphs,
+    },
+    planetGlyphs: {
+      ...wheel.defaultGlyphConfig?.planetGlyphs,
+      ...glyphOverrides?.planetGlyphs,
+    },
+    aspectGlyphs: {
+      ...wheel.defaultGlyphConfig?.aspectGlyphs,
+      ...glyphOverrides?.aspectGlyphs,
+    },
+  };
+  const glyphConfig = mergeGlyphConfig(combinedGlyphOverrides);
+  
+  return {
+    name: presetName,
+    wheel,
+    visualConfig,
+    glyphConfig,
+  };
 }
 
 /**
  * Classic preset - traditional astrological styling
  * Uses warm, vibrant colors and standard glyphs
  */
-export const classicPreset: ChartPreset = {
-  name: 'Classic',
-  description: 'Traditional astrological styling with warm, vibrant colors',
-  wheel: standardNatalWheel,
-  visualConfig: defaultVisualConfig,
-  glyphConfig: defaultGlyphConfig,
-};
+export const classicPreset: ChartPreset = createPresetFromWheel(
+  'Standard Natal Wheel',
+  'Classic',
+  undefined, // Use wheel defaults + base defaults
+  undefined
+);
+classicPreset.description = 'Traditional astrological styling with warm, vibrant colors';
 
 /**
  * Modern preset - contemporary colors and styling
  * Uses cooler tones and modern color palette
  */
-export const modernPreset: ChartPreset = {
-  name: 'Modern',
-  description: 'Contemporary styling with cooler tones and modern colors',
-  wheel: standardNatalWheel,
-  visualConfig: mergeVisualConfig({
+export const modernPreset: ChartPreset = createPresetFromWheel(
+  'Standard Natal Wheel',
+  'Modern',
+  {
     signColors: [
       '#E63946', // Aries - modern red
       '#F77F00', // Taurus - warm orange
@@ -83,19 +147,19 @@ export const modernPreset: ChartPreset = {
     ],
     backgroundColor: '#FAFAFA',
     strokeColor: '#333333',
-  }),
-  glyphConfig: defaultGlyphConfig,
-};
+  },
+  undefined // Use wheel glyph defaults
+);
+modernPreset.description = 'Contemporary styling with cooler tones and modern colors';
 
 /**
  * Minimal preset - clean, minimal design
  * Uses muted colors and simplified styling
  */
-export const minimalPreset: ChartPreset = {
-  name: 'Minimal',
-  description: 'Clean, minimal design with muted colors',
-  wheel: standardNatalWheel,
-  visualConfig: mergeVisualConfig({
+export const minimalPreset: ChartPreset = createPresetFromWheel(
+  'Standard Natal Wheel',
+  'Minimal',
+  {
     signColors: [
       '#E8E8E8', // Aries
       '#D3D3D3', // Taurus
@@ -146,11 +210,12 @@ export const minimalPreset: ChartPreset = {
     backgroundColor: '#FFFFFF',
     strokeColor: '#000000',
     strokeWidth: 1,
-  }),
-  glyphConfig: mergeGlyphConfig({
+  },
+  {
     glyphSize: 10,
-  }),
-};
+  }
+);
+minimalPreset.description = 'Clean, minimal design with muted colors';
 
 /**
  * All available chart presets
