@@ -25,6 +25,17 @@ export interface AnchorLongitudeResolver {
 }
 
 /**
+ * Normalize angle to 0-360 range
+ */
+export function normalizeDeg(degrees: number): number {
+  let normalized = degrees % 360;
+  if (normalized < 0) {
+    normalized += 360;
+  }
+  return normalized;
+}
+
+/**
  * Get the world longitude of an anchor target
  */
 export function getAnchorLongitude(
@@ -46,11 +57,28 @@ export function getAnchorLongitude(
 }
 
 /**
+ * Resolve worldZero from ViewFrame - either use direct value or resolve from anchor
+ */
+export function resolveWorldZero(
+  viewFrame: ViewFrame,
+  resolver: AnchorLongitudeResolver
+): number | null {
+  // If worldZero is directly provided, use it
+  if (viewFrame.worldZero !== undefined) {
+    return viewFrame.worldZero;
+  }
+  
+  // Otherwise, resolve from anchor
+  return getAnchorLongitude(viewFrame.anchor, resolver);
+}
+
+/**
  * Convert a world longitude to a screen angle based on ViewFrame.
+ * Supports both the new worldZero/screenZero model and the legacy anchor-based model.
  * 
  * @param worldLongitude - Longitude in the reference frame (0-360 degrees)
  * @param viewFrame - The view frame configuration
- * @param anchorLongitude - The longitude of the anchor in world coordinates
+ * @param anchorLongitude - The longitude of the anchor in world coordinates (used for legacy model)
  * @returns Screen angle in degrees (0-360, where 0° = 3 o'clock)
  */
 export function worldToScreenAngle(
@@ -58,6 +86,19 @@ export function worldToScreenAngle(
   viewFrame: ViewFrame,
   anchorLongitude: number
 ): number {
+  // Check if using new worldZero/screenZero model
+  if (viewFrame.worldZero !== undefined && viewFrame.screenZero !== undefined) {
+    const { worldZero, screenZero, direction = 1, scale = 1 } = viewFrame;
+    const delta = normalizeDeg(worldLongitude - worldZero);
+    // Normalize delta to -180 to 180 range for shortest path
+    let normalizedDelta = delta;
+    if (normalizedDelta > 180) normalizedDelta -= 360;
+    if (normalizedDelta < -180) normalizedDelta += 360;
+    
+    return normalizeDeg(screenZero + direction * normalizedDelta * scale);
+  }
+
+  // Legacy anchor-based model
   // Calculate the offset from the anchor
   let offset = worldLongitude - anchorLongitude;
 
@@ -81,14 +122,12 @@ export function worldToScreenAngle(
   }
 
   // Normalize to 0-360
-  while (screenAngle < 0) screenAngle += 360;
-  while (screenAngle >= 360) screenAngle -= 360;
-
-  return screenAngle;
+  return normalizeDeg(screenAngle);
 }
 
 /**
  * Convert a screen angle back to world longitude (inverse of worldToScreenAngle).
+ * Supports both the new worldZero/screenZero model and the legacy anchor-based model.
  * Useful for hit testing or interactive positioning.
  */
 export function screenToWorldLongitude(
@@ -96,10 +135,22 @@ export function screenToWorldLongitude(
   viewFrame: ViewFrame,
   anchorLongitude: number
 ): number {
+  // Check if using new worldZero/screenZero model
+  if (viewFrame.worldZero !== undefined && viewFrame.screenZero !== undefined) {
+    const { worldZero, screenZero, direction = 1, scale = 1 } = viewFrame;
+    const normalizedScreen = normalizeDeg(screenAngle);
+    const delta = normalizedScreen - screenZero;
+    // Normalize delta to -180 to 180 range
+    let normalizedDelta = delta;
+    if (normalizedDelta > 180) normalizedDelta -= 360;
+    if (normalizedDelta < -180) normalizedDelta += 360;
+    
+    return normalizeDeg(worldZero + (normalizedDelta / scale) * direction);
+  }
+
+  // Legacy anchor-based model
   // Normalize screen angle
-  let normalizedScreen = screenAngle;
-  while (normalizedScreen < 0) normalizedScreen += 360;
-  while (normalizedScreen >= 360) normalizedScreen -= 360;
+  const normalizedScreen = normalizeDeg(screenAngle);
 
   // Calculate offset from anchor's screen position
   let offset = normalizedScreen - viewFrame.screenAngleDeg;
@@ -119,13 +170,7 @@ export function screenToWorldLongitude(
   }
 
   // Convert to world longitude
-  let worldLongitude = anchorLongitude + offset;
-
-  // Normalize to 0-360
-  while (worldLongitude < 0) worldLongitude += 360;
-  while (worldLongitude >= 360) worldLongitude -= 360;
-
-  return worldLongitude;
+  return normalizeDeg(anchorLongitude + offset);
 }
 
 /**

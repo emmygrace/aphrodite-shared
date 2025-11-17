@@ -74,6 +74,32 @@ export const presetMcTop: OrientationPreset = {
 };
 
 /**
+ * MC at top (12 o'clock) - Mirrored view using worldZero/screenZero model
+ * Houses are numbered from 180° CCW (reversed house numbering)
+ * This demonstrates the new worldZero/screenZero model with direction: -1 for mirroring
+ * Note: worldZero will be resolved from MC longitude at runtime
+ */
+export const presetMcTopMirrored: OrientationPreset = {
+  id: 'mc-top-mirrored',
+  name: 'MC at Top (Mirrored)',
+  description: 'MC at top with mirrored orientation. Houses numbered from 180° CCW. Uses worldZero/screenZero model with direction: -1.',
+  frame: {
+    referenceFrame: 'houses',
+    anchor: { kind: 'angle', type: 'MC' }, // worldZero will be resolved from MC at runtime
+    screenZero: 90, // MC at top (12 o'clock)
+    direction: -1, // Mirror: world increases CW instead of CCW
+    // Note: worldZero will be set dynamically from MC longitude when chart is available
+  },
+  locks: [
+    {
+      subject: { kind: 'angle', types: ['ASC'] },
+      frame: 'screen',
+      mode: 'exact',
+    },
+  ],
+};
+
+/**
  * Aries at top (12 o'clock) - Zodiac-centric view
  * Signs are fixed, houses rotate
  */
@@ -199,6 +225,7 @@ export const allPresets: OrientationPreset[] = [
   presetAscLeft,
   presetAscRight,
   presetMcTop,
+  presetMcTopMirrored,
   presetAriesTop,
   presetFixedHouses,
   presetFixedSigns,

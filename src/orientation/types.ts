@@ -93,6 +93,32 @@ export interface ViewFrame {
    * Optional: Mirror across the anchor axis
    */
   angularFlip?: boolean;
+
+  /**
+   * Optional: World longitude that maps to screenZero (alternative to anchor-based model)
+   * If provided along with screenZero, uses direct worldZero/screenZero mapping instead of anchor resolution
+   */
+  worldZero?: number;
+
+  /**
+   * Optional: Screen angle for worldZero (0° = right, 90° = top, 180° = left, 270° = bottom)
+   * Must be provided with worldZero to use the simplified model
+   */
+  screenZero?: number;
+
+  /**
+   * Optional: Direction multiplier for world-to-screen mapping
+   * +1 = world increases CCW on screen (default), -1 = world increases CW (mirror)
+   * Only used when worldZero and screenZero are provided
+   */
+  direction?: 1 | -1;
+
+  /**
+   * Optional: Scale factor - degrees of world per degree of screen
+   * Default is 1 (1:1 mapping). Allows zooming if needed.
+   * Only used when worldZero and screenZero are provided
+   */
+  scale?: number;
 }
 
 /**
@@ -167,5 +193,109 @@ export interface OrientationPreset {
   description: string;
   frame: ViewFrame;
   locks: LockRule[];
+}
+
+/**
+ * Chart snapshot - contains chart data needed for orientation calculations
+ * This type matches ChartDataForOrientation from aphrodite-core
+ */
+export interface ChartSnapshot {
+  /**
+   * Planet longitudes: planet index -> longitude (0-360)
+   */
+  planetLongitudes?: Map<number | string, number>;
+
+  /**
+   * House cusps: house number (1-12) -> cusp longitude (0-360)
+   */
+  houseCusps?: Map<HouseNumber, number>;
+
+  /**
+   * Angle longitudes: angle type -> longitude (0-360)
+   */
+  angleLongitudes?: Map<AngleType, number>;
+}
+
+/**
+ * Orientation trigger - defines when an orientation rule should fire
+ */
+export type OrientationTrigger =
+  | { type: 'ascLeavesHouse'; house: number }
+  | { type: 'planetCrossesHouse'; planet: string; house: number }
+  | { type: 'planetCrossesAngle'; planet: string; angle: AngleType }
+  | { type: 'custom'; id: string };
+
+/**
+ * Orientation effect - defines what happens when a rule triggers
+ */
+export type OrientationEffect =
+  | { type: 'rotate'; wheel: 'zodiac' | 'houses' | 'all'; delta: number }
+  | { type: 'setViewFrame'; viewFrame: ViewFrame }
+  | { type: 'mirror'; wheel: 'zodiac' | 'houses' | 'all' };
+
+/**
+ * Orientation rule - combines a trigger and effect for dynamic view frame changes
+ */
+export interface OrientationRule {
+  /**
+   * Unique identifier for this rule
+   */
+  id: string;
+
+  /**
+   * Condition that triggers this rule
+   */
+  trigger: OrientationTrigger;
+
+  /**
+   * Effect to apply when rule triggers
+   */
+  effect: OrientationEffect;
+
+  /**
+   * Optional: Animation duration in milliseconds
+   */
+  animationMs?: number;
+
+  /**
+   * Optional: Additional locks that apply while this rule's effect is active
+   */
+  locks?: LockRule[];
+}
+
+/**
+ * Orientation program - defines base frame, locks, and dynamic rules
+ */
+export interface OrientationProgram {
+  /**
+   * Base view frame (starting point)
+   */
+  baseFrame: ViewFrame;
+
+  /**
+   * Base lock rules
+   */
+  locks?: LockRule[];
+
+  /**
+   * Dynamic rules that modify the frame based on chart state
+   */
+  rules?: OrientationRule[];
+}
+
+/**
+ * Runtime state for orientation program evaluation
+ */
+export interface OrientationRuntimeState {
+  /**
+   * Set of rule IDs that have been applied (for one-time transitions)
+   */
+  appliedRuleIds: Set<string>;
+
+  /**
+   * Previous house positions for tracking transitions
+   * Key format: "planetId:houseNumber" or "ASC:houseNumber"
+   */
+  previousHousePositions?: Map<string, number>;
 }
 
