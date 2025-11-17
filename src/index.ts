@@ -23,3 +23,6 @@ export * from './presets';
 // Export all types
 export * from './types';
 
+// Export orientation types and presets
+export * from './orientation';
+
