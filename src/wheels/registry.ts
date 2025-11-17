@@ -6,7 +6,13 @@
 import type { WheelDefinitionWithPresets } from './types';
 
 // Built-in definitions
-import { standardNatal } from './definitions';
+import {
+  standardNatal,
+  biWheelNatalTransit,
+  biWheelSynastry,
+  complexNatal,
+  simpleNatal,
+} from './definitions';
 
 // User-registered definitions (loaded dynamically)
 const userDefinitions = new Map<string, WheelDefinitionWithPresets>();
@@ -60,6 +66,14 @@ export function getWheelDefinition(name: string): WheelDefinitionWithPresets | u
   switch (key) {
     case 'standard-natal-wheel':
       return standardNatal;
+    case 'bi-wheel-natal-transit':
+      return biWheelNatalTransit;
+    case 'bi-wheel-synastry':
+      return biWheelSynastry;
+    case 'complex-natal-wheel':
+      return complexNatal;
+    case 'simple-natal-wheel':
+      return simpleNatal;
     default:
       return undefined;
   }
@@ -74,6 +88,10 @@ export function getWheelDefinition(name: string): WheelDefinitionWithPresets | u
 export function listWheelDefinitions(): WheelDefinitionWithPresets[] {
   return [
     standardNatal,
+    biWheelNatalTransit,
+    biWheelSynastry,
+    complexNatal,
+    simpleNatal,
     ...Array.from(userDefinitions.values()),
   ];
 }
@@ -84,7 +102,13 @@ export function listWheelDefinitions(): WheelDefinitionWithPresets[] {
  * @returns Array of built-in wheel definition names
  */
 export function getBuiltInWheelNames(): string[] {
-  return ['Standard Natal Wheel'];
+  return [
+    'Standard Natal Wheel',
+    'Bi-Wheel Natal-Transit',
+    'Bi-Wheel Synastry',
+    'Complex Natal Wheel',
+    'Simple Natal Wheel',
+  ];
 }
 
 /**
