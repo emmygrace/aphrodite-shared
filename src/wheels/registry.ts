@@ -12,6 +12,7 @@ import {
   biWheelSynastry,
   complexNatal,
   simpleNatal,
+  vedicNatal,
 } from './definitions';
 
 // User-registered definitions (loaded dynamically)
@@ -74,6 +75,8 @@ export function getWheelDefinition(name: string): WheelDefinitionWithPresets | u
       return complexNatal;
     case 'simple-natal-wheel':
       return simpleNatal;
+    case 'vedic-natal-wheel':
+      return vedicNatal;
     default:
       return undefined;
   }
@@ -92,6 +95,7 @@ export function listWheelDefinitions(): WheelDefinitionWithPresets[] {
     biWheelSynastry,
     complexNatal,
     simpleNatal,
+    vedicNatal,
     ...Array.from(userDefinitions.values()),
   ];
 }
@@ -108,6 +112,7 @@ export function getBuiltInWheelNames(): string[] {
     'Bi-Wheel Synastry',
     'Complex Natal Wheel',
     'Simple Natal Wheel',
+    'Vedic Natal Wheel',
   ];
 }
 

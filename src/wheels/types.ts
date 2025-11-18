@@ -12,6 +12,10 @@ export interface StaticZodiacSource {
   kind: 'static_zodiac';
 }
 
+export interface StaticNakshatraSource {
+  kind: 'static_nakshatras';
+}
+
 export interface LayerHousesSource {
   kind: 'layer_houses';
   layerId: string;
@@ -20,6 +24,12 @@ export interface LayerHousesSource {
 export interface LayerPlanetsSource {
   kind: 'layer_planets';
   layerId: string;
+}
+
+export interface LayerVargaPlanetsSource {
+  kind: 'layer_varga_planets';
+  layerId: string;
+  vargaId: string;
 }
 
 export interface AspectSetFilter {
@@ -36,8 +46,10 @@ export interface AspectSetSource {
 
 export type RingDataSource =
   | StaticZodiacSource
+  | StaticNakshatraSource
   | LayerHousesSource
   | LayerPlanetsSource
+  | LayerVargaPlanetsSource
   | AspectSetSource;
 
 /**

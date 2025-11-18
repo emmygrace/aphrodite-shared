@@ -136,6 +136,14 @@ Presets merge configurations in this order:
 - **modern**: Contemporary styling with cooler tones and modern colors
 - **minimal**: Clean, minimal design with muted colors
 
+## Vedic Additions
+
+- New built-in wheel: **Vedic Natal Wheel** (nakshatra ring + whole-sign houses + natal planets + Navamsa overlay). Load it via `getWheelDefinition('Vedic Natal Wheel')`.
+- Extra ring data sources:
+  - `static_nakshatras` — 27 equal segments pre-aligned to the sidereal zodiac.
+  - `layer_varga_planets` — renders divisional chart positions returned in `vedic.layers[layerId].vargas[vargaId]`.
+- These additions pair with the backend/`iris-core` Vedic payload so the D3 renderer can display nakshatra bands and D-charts without additional wiring.
+
 ## Package Structure
 
 ```
