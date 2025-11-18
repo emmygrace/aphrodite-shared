@@ -1,6 +1,6 @@
 /**
  * Default visual configuration for chart rendering.
- * Moved from aphrodite-core to be shared across platforms.
+ * Moved from aphrodite-d3 to be shared across platforms.
  */
 
 import type { VisualConfig } from './types';

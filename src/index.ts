@@ -5,7 +5,7 @@
  * for the Aphrodite chart rendering system.
  * 
  * This package can be used by:
- * - aphrodite-core (Core rendering engine)
+ * - aphrodite-d3 (D3-based rendering engine)
  * - aphrodite-python (future Python bindings)
  * - aphrodite-android (future Android bindings)
  * - Any other platform that needs chart configuration

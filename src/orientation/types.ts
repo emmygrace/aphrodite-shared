@@ -197,7 +197,7 @@ export interface OrientationPreset {
 
 /**
  * Chart snapshot - contains chart data needed for orientation calculations
- * This type matches ChartDataForOrientation from aphrodite-core
+ * This type matches ChartDataForOrientation from aphrodite-d3
  */
 export interface ChartSnapshot {
   /**

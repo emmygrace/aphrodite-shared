@@ -188,7 +188,7 @@ import { ... } from '@gaia-tools/aphrodite-shared/presets';
 
 This package is designed to be used by:
 
-- `@gaia-tools/aphrodite-core` - Core rendering engine
+- `@gaia-tools/aphrodite-d3` - D3-based rendering engine
 - `@gaia-tools/aphrodite-python` - Future Python bindings
 - `@gaia-tools/aphrodite-android` - Future Android bindings
 - Any other platform that needs chart configuration
