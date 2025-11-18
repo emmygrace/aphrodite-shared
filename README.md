@@ -188,7 +188,6 @@ import { ... } from '@gaia-tools/aphrodite-shared/presets';
 
 This package is designed to be used by:
 
-- `@gaia-tools/aphrodite-react` - React bindings
 - `@gaia-tools/aphrodite-core` - Core rendering engine
 - `@gaia-tools/aphrodite-python` - Future Python bindings
 - `@gaia-tools/aphrodite-android` - Future Android bindings
