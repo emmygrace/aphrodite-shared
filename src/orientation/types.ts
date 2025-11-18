@@ -231,7 +231,9 @@ export type OrientationTrigger =
 export type OrientationEffect =
   | { type: 'rotate'; wheel: 'zodiac' | 'houses' | 'all'; delta: number }
   | { type: 'setViewFrame'; viewFrame: ViewFrame }
-  | { type: 'mirror'; wheel: 'zodiac' | 'houses' | 'all' };
+  | { type: 'mirror'; wheel: 'zodiac' | 'houses' | 'all' }
+  | { type: 'snapHouseToAngle'; house: HouseNumber; screenAngle: number }
+  | { type: 'snapAnchorToAngle'; anchor: AngleType; screenAngle: number };
 
 /**
  * Orientation rule - combines a trigger and effect for dynamic view frame changes
