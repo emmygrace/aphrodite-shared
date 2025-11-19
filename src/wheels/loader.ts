@@ -152,21 +152,31 @@ function validateWheelDefinition(definition: any): asserts definition is WheelDe
       'description'
     );
   }
-  
-  if (definition.version !== undefined && typeof definition.version !== 'string') {
-    throw new WheelDefinitionValidationError(
-      'Wheel definition version must be a string',
-      'version'
-    );
+
+  if (definition.version !== undefined) {
+    if (typeof definition.version !== 'string') {
+      throw new WheelDefinitionValidationError(
+        'Wheel definition version must be a string',
+        'version'
+      );
+    }
+    // Validate version format (semver-like: major.minor.patch)
+    const versionRegex = /^\d+\.\d+\.\d+$/;
+    if (!versionRegex.test(definition.version)) {
+      throw new WheelDefinitionValidationError(
+        `Wheel definition version must be in format major.minor.patch (e.g., "1.0.0"), got: ${definition.version}`,
+        'version'
+      );
+    }
   }
-  
+
   if (definition.author !== undefined && typeof definition.author !== 'string') {
     throw new WheelDefinitionValidationError(
       'Wheel definition author must be a string',
       'author'
     );
   }
-  
+
   if (definition.tags !== undefined) {
     if (!Array.isArray(definition.tags)) {
       throw new WheelDefinitionValidationError(

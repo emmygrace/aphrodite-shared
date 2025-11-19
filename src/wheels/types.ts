@@ -63,7 +63,7 @@ export interface RingDefinition {
   radiusInner: number; // 0-1 normalized
   radiusOuter: number; // 0-1 normalized
   dataSource: RingDataSource;
-  displayOptions?: Record<string, any>;
+  displayOptions?: Record<string, unknown>;
 }
 
 /**
@@ -73,7 +73,7 @@ export interface WheelDefinition {
   name: string;
   description?: string;
   rings: RingDefinition[];
-  config?: Record<string, any>;
+  config?: Record<string, unknown>;
 }
 
 /**

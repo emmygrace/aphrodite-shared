@@ -683,6 +683,144 @@ export const biWheelTransitsPreset: ChartPreset = createPresetFromWheel(
 biWheelTransitsPreset.description = 'Bi-wheel optimized for transit visualization with clear natal/transit distinction';
 
 /**
+ * Dark mode preset - dark background with bright colors
+ */
+export const darkModePreset: ChartPreset = createPresetFromWheel(
+  'Standard Natal Wheel',
+  'Dark Mode',
+  {
+    signColors: [
+      '#C0392B', // Aries - deep red
+      '#D68910', // Taurus - golden brown
+      '#F39C12', // Gemini - amber
+      '#85C1E2', // Cancer - soft blue
+      '#F7DC6F', // Leo - golden yellow
+      '#82E0AA', // Virgo - sage green
+      '#F8C471', // Libra - peach
+      '#8B4513', // Scorpio - sienna
+      '#F1C40F', // Sagittarius - bright gold
+      '#5D6D7E', // Capricorn - slate gray
+      '#3498DB', // Aquarius - sky blue
+      '#9B59B6', // Pisces - lavender
+    ],
+    houseColors: [
+      '#3A3A3A', // Dark gray with warm tint
+      '#404040',
+      '#454545',
+      '#4A4A4A',
+      '#505050',
+      '#555555',
+      '#3A3A3A',
+      '#404040',
+      '#454545',
+      '#4A4A4A',
+      '#505050',
+      '#555555',
+    ],
+    planetColors: [
+      '#F39C12', // Sun - golden
+      '#F7DC6F', // Moon - pale gold
+      '#D68910', // Mercury - bronze
+      '#F8C471', // Venus - peach
+      '#C0392B', // Mars - deep red
+      '#F1C40F', // Jupiter - bright gold
+      '#5D6D7E', // Saturn - slate
+      '#85C1E2', // Uranus - sky blue
+      '#3498DB', // Neptune - blue
+      '#8B4513', // Pluto - sienna
+    ],
+    aspectColors: {
+      conjunction: '#C0392B',
+      opposition: '#3498DB',
+      trine: '#27AE60',
+      square: '#E74C3C',
+      sextile: '#F39C12',
+      semisextile: '#D68910',
+      semisquare: '#E67E22',
+      sesquiquadrate: '#E67E22',
+      quincunx: '#8B4513',
+    },
+    backgroundColor: '#1a1a1a',
+    strokeColor: '#d4af37', // Gold
+    strokeWidth: 1,
+    aspectStrokeWidth: 2,
+  },
+  {
+    glyphSize: 12,
+  }
+);
+darkModePreset.description = 'Dark mode with bright colors on dark background';
+
+/**
+ * High contrast preset - maximum contrast for accessibility
+ */
+export const highContrastPreset: ChartPreset = createPresetFromWheel(
+  'Standard Natal Wheel',
+  'High Contrast',
+  {
+    signColors: [
+      '#FF0000', // Aries - red
+      '#FF8000', // Taurus - orange
+      '#FFFF00', // Gemini - yellow
+      '#00FF00', // Cancer - green
+      '#00FFFF', // Leo - cyan
+      '#0080FF', // Virgo - blue
+      '#8000FF', // Libra - purple
+      '#FF0080', // Scorpio - magenta
+      '#FF8040', // Sagittarius - orange-red
+      '#808080', // Capricorn - gray
+      '#40FF80', // Aquarius - green-cyan
+      '#8040FF', // Pisces - purple-blue
+    ],
+    houseColors: [
+      '#FFFFFF', // White
+      '#000000', // Black
+      '#FFFFFF',
+      '#000000',
+      '#FFFFFF',
+      '#000000',
+      '#FFFFFF',
+      '#000000',
+      '#FFFFFF',
+      '#000000',
+      '#FFFFFF',
+      '#000000',
+    ],
+    planetColors: [
+      '#FFFF00', // Sun - yellow
+      '#FFFFFF', // Moon - white
+      '#FF0000', // Mercury - red
+      '#00FF00', // Venus - green
+      '#FF0000', // Mars - red
+      '#FF8000', // Jupiter - orange
+      '#000000', // Saturn - black
+      '#00FFFF', // Uranus - cyan
+      '#0000FF', // Neptune - blue
+      '#800080', // Pluto - purple
+    ],
+    aspectColors: {
+      conjunction: '#FF0000',
+      opposition: '#0000FF',
+      trine: '#00FF00',
+      square: '#FF0000',
+      sextile: '#FFFF00',
+      semisextile: '#FF8000',
+      semisquare: '#FF0000',
+      sesquiquadrate: '#FF0000',
+      quincunx: '#800080',
+    },
+    backgroundColor: '#FFFFFF',
+    strokeColor: '#000000',
+    strokeWidth: 2,
+    aspectStrokeWidth: 3,
+  },
+  {
+    glyphSize: 14,
+  }
+);
+highContrastPreset.description = 'High contrast theme for maximum accessibility';
+
+/**
  * All available chart presets
  */
 export const chartPresets: Record<string, ChartPreset> = {
@@ -696,6 +834,8 @@ export const chartPresets: Record<string, ChartPreset> = {
   'bi-wheel-traditional': biWheelTraditionalPreset,
   'bi-wheel-modern': biWheelModernPreset,
   'bi-wheel-transits': biWheelTransitsPreset,
+  'dark-mode': darkModePreset,
+  'high-contrast': highContrastPreset,
 };
 
 /**

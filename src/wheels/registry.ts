@@ -135,3 +135,63 @@ export function hasWheelDefinition(name: string): boolean {
   return getWheelDefinition(name) !== undefined;
 }
 
+/**
+ * Search wheel definitions by name, description, tags, or author
+ */
+export function searchWheelDefinitions(query: string): WheelDefinitionWithPresets[] {
+  const normalizedQuery = query.toLowerCase();
+  const allWheels = listWheelDefinitions();
+  
+  return allWheels.filter((wheel) => {
+    // Search in name
+    if (wheel.name.toLowerCase().includes(normalizedQuery)) {
+      return true;
+    }
+    
+    // Search in description
+    if (wheel.description && wheel.description.toLowerCase().includes(normalizedQuery)) {
+      return true;
+    }
+    
+    // Search in tags
+    if (wheel.tags && wheel.tags.some(tag => tag.toLowerCase().includes(normalizedQuery))) {
+      return true;
+    }
+    
+    // Search in author
+    if (wheel.author && wheel.author.toLowerCase().includes(normalizedQuery)) {
+      return true;
+    }
+    
+    return false;
+  });
+}
+
+/**
+ * Filter wheel definitions by tags
+ */
+export function filterWheelDefinitionsByTags(tags: string[]): WheelDefinitionWithPresets[] {
+  const allWheels = listWheelDefinitions();
+  const normalizedTags = tags.map(t => t.toLowerCase());
+  
+  return allWheels.filter((wheel) => {
+    if (!wheel.tags || wheel.tags.length === 0) {
+      return false;
+    }
+    
+    return wheel.tags.some(tag => normalizedTags.includes(tag.toLowerCase()));
+  });
+}
+
+/**
+ * Get wheel definitions by author
+ */
+export function getWheelDefinitionsByAuthor(author: string): WheelDefinitionWithPresets[] {
+  const allWheels = listWheelDefinitions();
+  const normalizedAuthor = author.toLowerCase();
+  
+  return allWheels.filter((wheel) => {
+    return wheel.author && wheel.author.toLowerCase() === normalizedAuthor;
+  });
+}
+
